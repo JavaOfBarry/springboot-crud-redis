@@ -14,7 +14,7 @@ public class SpringbootCrudApplication{
 		SpringApplication.run(SpringbootCrudApplication.class, args);
 	}
     /**  
-     * 文件上传配置  
+     * 文件上传配置  默认为1M
      * @return  
      */  
     @Bean  

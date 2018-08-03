@@ -2,15 +2,15 @@ package com.chat.Entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
-
 @Data
 @Entity
-public class User {
+public class User  implements Serializable{
 
 	@Id
 	@GeneratedValue
@@ -25,7 +25,7 @@ public class User {
 	
 	private int age;
 
-	private Date regTime;
+	private String regTime;
 
 	public Integer getId() {
 		return id;
@@ -59,11 +59,11 @@ public class User {
 		this.age = age;
 	}
 
-	public Date getRegTime() {
+	public String getRegTime() {
 		return regTime;
 	}
 
-	public void setRegTime(Date regTime) {
+	public void setRegTime(String regTime) {
 		this.regTime = regTime;
 	}
 

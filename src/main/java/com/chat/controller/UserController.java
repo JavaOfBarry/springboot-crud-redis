@@ -2,7 +2,10 @@ package com.chat.controller;
 
 import com.chat.Entity.User;
 import com.chat.param.UserParam;
+import com.chat.service.RedisService;
 import com.chat.service.UserService;
+import com.chat.utils.Utils;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,14 +31,23 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * 控制层
+ * @author wangwb
+ *
+ */
 @Controller
 public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+    private RedisService redisService;
+	
 	@RequestMapping("/")
 	public String index(){
 		return "redirect:/getlist";
@@ -61,6 +73,8 @@ public class UserController {
 		String errorMsg = "";
 		String destFileName= "";
 		String fileName ="";
+		String key = "";
+		Map map = new HashMap<String,String>();
 		if(result.hasErrors()) {
 			List<ObjectError> list = result.getAllErrors();
 			for (ObjectError error : list) {
@@ -94,9 +108,17 @@ public class UserController {
 		}
 		User user1 = new User();
 		BeanUtils.copyProperties(userParam,user1);
-		user1.setRegTime(new Date());
+		user1.setRegTime(Utils.getStringDate());
 		user1.setDestFileName("/advertIMG/"+fileName);
 		userService.addUser(user1);
+//		//保存到reids	
+//		key = "user:"+user1.getId()+":"+user1.getUserName();
+//		try {
+//			map = Utils.objectToMap(user1);
+//			redisService.hmSetHash(key, map);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return "redirect:/getlist";
 	}
 
@@ -119,7 +141,7 @@ public class UserController {
 		User user1 = userService.findById(userParam.getId());
 		User user = new User();
 		BeanUtils.copyProperties(userParam,user);
-		user.setRegTime(new Date());
+		user.setRegTime(Utils.getStringDate());
 		user.setDestFileName(user1.getDestFileName());
 
 		if(result.hasErrors()){
@@ -161,6 +183,10 @@ public class UserController {
 	@Transactional
 	@Modifying
 	public String delete(Integer id){
+//		//保存到reids		
+//		User user = userService.findById(id);
+//		String key = "user:"+user.getId()+":"+user.getUserName();
+//		redisService.remove(key);
 		userService.deleteById(id);
 		return "redirect:/getlist";
 	}
