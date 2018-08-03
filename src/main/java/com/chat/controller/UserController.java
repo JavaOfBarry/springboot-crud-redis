@@ -153,6 +153,7 @@ public class UserController {
 			modelMap.addAttribute("user",user);
 			return "userEdit";
 		}
+		
 		//上传图片
 		if (!file.isEmpty()) {
 			try {
